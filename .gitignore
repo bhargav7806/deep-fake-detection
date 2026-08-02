@@ -1,0 +1,14 @@
+facenv/
+__pycache__/
+.ipynb_checkpoints/
+
+# Dataset
+data/Data/train/
+
+data/Data/val/
+
+data/Data/test/
+
+
+data/images/
+
