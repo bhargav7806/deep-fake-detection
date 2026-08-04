@@ -1,43 +1,49 @@
-from flask import Flask , render_template , request
+import streamlit as st
 import tensorflow as tf
-import numpy as np
-import cv2
 from PIL import Image
 from utils import process_image
 import warnings
 
 warnings.filterwarnings("ignore")
 
-app = Flask(__name__)
+# Load model only once
+@st.cache_resource
+def load_model():
+    return tf.keras.models.load_model("fine_tuned_model.keras")
 
-model = tf.keras.models.load_model(r"D:\AI\projects\deep fake detection\fine_tuned_model.keras")
+model = load_model()
 
-Threshold = 0.7
+THRESHOLD = 0.7
 
-@app.route("/" , methods = ['GET' , 'POST'])
+st.set_page_config(
+    page_title="Deep Fake Detection",
+    page_icon="🧠",
+    layout="centered"
+)
 
-def home():
-    prediction = None 
-    probability = None
+st.title("🧠 Deep Fake Detection")
+st.write("Upload an image to check whether it is **Real** or **AI Generated**.")
 
-    if request.method == 'POST':
-        file = request.files['image']
-        image = Image.open(file).convert('RGB')
+uploaded_file = st.file_uploader(
+    "Choose an image",
+    type=["jpg", "jpeg", "png"]
+)
+
+if uploaded_file is not None:
+
+    image = Image.open(uploaded_file).convert("RGB")
+
+    st.image(image, caption="Uploaded Image", use_container_width=True)
+
+    if st.button("Predict"):
+
         processed = process_image(image)
 
-        probability = model.predict(processed , verbose = 0)[0][0]
+        probability = model.predict(processed, verbose=0)[0][0]
 
-        if probability >= 0.7:
-            prediction  = 'REAL IMAGE'
+        if probability >= THRESHOLD:
+            st.success("✅ REAL IMAGE")
         else:
-            prediction = 'AI GENERATED IMAGE'
+            st.error("❌ AI GENERATED IMAGE")
 
-    return render_template(
-        "index.html",
-        prediction = prediction  
-    )
-
-if __name__ == "__main__":
-    app.run(debug = True)
-
-
+        st.write(f"**Probability:** {probability:.4f}")
