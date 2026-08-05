@@ -17,7 +17,6 @@ THRESHOLD = 0.7
 
 st.set_page_config(
     page_title="Deep Fake Detection",
-    page_icon="🧠",
     layout="centered"
 )
 
@@ -46,4 +45,4 @@ if uploaded_file is not None:
         else:
             st.error("❌ AI GENERATED IMAGE")
 
-        st.write(f"**Probability:** {probability:.4f}")
+        st.write(f"**Confidence:** {probability * 100 :.2f}%")
