@@ -184,3 +184,4 @@ This project is intended for educational and research purposes.
 **Bhargav Jadav**
 
 GitHub: https://github.com/bhargav7806
+app link : https://deep-fake-detection-5hvvrcrckuuqt8h3cehvyp.streamlit.app/
